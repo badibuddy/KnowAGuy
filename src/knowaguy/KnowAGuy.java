@@ -31,7 +31,8 @@ public class KnowAGuy {
 
     public static String welcomeOptions( ) {
         switch (sel) {
-             case "1":
+             case "1":                
+                login.main(new String[] {""});
                 break;
             case "2":
                 accountCreation.main(new String[] {""});
