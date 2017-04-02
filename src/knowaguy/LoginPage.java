@@ -5,6 +5,11 @@
  */
 package knowaguy;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 
@@ -20,7 +25,7 @@ public class LoginPage extends javax.swing.JFrame {
     public LoginPage() {
         initComponents();
     }
-    String role, username;
+    String role, username, password;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,13 +44,6 @@ public class LoginPage extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
-            }
-        });
-
         jLabel1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel1.setText("Username");
 
@@ -123,26 +121,22 @@ public class LoginPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        username = jTextField1.getText();
+        username = jTextField1.getText().trim();
+        password = jPasswordField1.getText().trim();
         RegistrationCust rc = new RegistrationCust();
-            
         
-        if(knowaguy.RegistrationCust.username.equalsIgnoreCase("badi")){
-            JOptionPane.showMessageDialog(rc, "Hello " + username + "! Welcome.");
-            CustomerPortal cp = new CustomerPortal();
-            cp.setVisible(true);        
-            }
-            else {
-            JOptionPane.showMessageDialog(rc, "Username " + username + " does not exist."
-                    + "\n \t\t\t Try a valid username.");   
+        //Checkc if either feild is empty
+        if (username.isEmpty() || password.isEmpty()){
+            JOptionPane.showMessageDialog(rc,"Kindly provide a username and password.");
+        } 
+        else{
+            validateCredentails();
+        }
+            
     }//GEN-LAST:event_jButton1ActionPerformed
-    }
+
     
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         RegistrationPage rp = new RegistrationPage();
@@ -150,6 +144,51 @@ public class LoginPage extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    public String validateCredentails(){
+        Connection conn;
+        Statement stmt;
+        try{
+           //Register the JDBC driver
+            Class.forName("org.postgresql.Driver");
+            //DB URL and port
+            String host = "jdbc:postgresql://localhost:5433/know_a_guy"; 
+            //DB Credentials
+            String uName = "postgres";
+            String uPass = "p0stgr3s";
+            //Open a connection
+            conn = DriverManager.getConnection(host,uName,uPass);
+            conn.setAutoCommit(false);
+            System.out.println("Connection opened successfully");
+            stmt = conn.createStatement();
+            String client_query = String.format("SELECT count(*) FROM"
+                        + " tbl_clients where client_uname = '%s' "
+                        + "and client_pass = '%s';", username, password);            
+            String vendor_query = String.format("SELECT count(*) FROM"
+                        + " tbl_vendors where vendor_uname = '%s' "
+                        + "and vendor_pass = '%s';", username, password);
+            System.out.println(client_query);
+            System.out.println(vendor_query);
+
+            ResultSet rsc = stmt.executeQuery(client_query);
+            int clients = rsc.getRow() ;
+            rsc.close();
+            
+            ResultSet rsv = stmt.executeQuery(vendor_query);
+            int vendors = rsv.getRow() ;
+            rsv.close();
+            
+            System.out.println(clients + " : " + vendors);
+            stmt.close();
+            conn.close();
+        }
+        catch (SQLException | ClassNotFoundException e){
+                    System.err.println(e.getClass().getName()+": "+e.getMessage());
+                    System.exit(0);
+        }  
+        return role;
+    }  
+
+    
     /**
      * @param args the command line arguments
      */
