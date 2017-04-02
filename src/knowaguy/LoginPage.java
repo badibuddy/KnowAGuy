@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author Lulu
@@ -26,6 +25,7 @@ public class LoginPage extends javax.swing.JFrame {
         initComponents();
     }
     String role, username, password;
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,8 +42,11 @@ public class LoginPage extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
         jLabel1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel1.setText("Username");
 
@@ -71,32 +74,44 @@ public class LoginPage extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Know A Guy");
 
+        jLabel5.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
+        jLabel5.setText("Select Role");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Client", "Vendor" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(181, 181, 181))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(190, 190, 190))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(72, 72, 72)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(181, 181, 181))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(72, 72, 72)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(86, 86, 86)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(101, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(145, 145, 145))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,84 +126,74 @@ public class LoginPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         username = jTextField1.getText().trim();
         password = jPasswordField1.getText().trim();
+        role = jComboBox1.getSelectedItem().toString().toLowerCase();
         RegistrationCust rc = new RegistrationCust();
-        
+
         //Checkc if either feild is empty
-        if (username.isEmpty() || password.isEmpty()){
-            JOptionPane.showMessageDialog(rc,"Kindly provide a username and password.");
-        } 
-        else{
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(rc, "Kindly provide a username and password.");
+        } else {
             validateCredentails();
         }
-            
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
+
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         RegistrationPage rp = new RegistrationPage();
         rp.setVisible(true);
         dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
-    public String validateCredentails(){
+    public String validateCredentails() {
         Connection conn;
         Statement stmt;
-        try{
-           //Register the JDBC driver
+        try {
+            //Register the JDBC driver
             Class.forName("org.postgresql.Driver");
             //DB URL and port
-            String host = "jdbc:postgresql://localhost:5433/know_a_guy"; 
+            String host = "jdbc:postgresql://localhost:5433/know_a_guy";
             //DB Credentials
             String uName = "postgres";
             String uPass = "p0stgr3s";
             //Open a connection
-            conn = DriverManager.getConnection(host,uName,uPass);
+            conn = DriverManager.getConnection(host, uName, uPass);
             conn.setAutoCommit(false);
             System.out.println("Connection opened successfully");
             stmt = conn.createStatement();
-            String client_query = String.format("SELECT count(*) FROM"
-                        + " tbl_clients where client_uname = '%s' "
-                        + "and client_pass = '%s';", username, password);            
-            String vendor_query = String.format("SELECT count(*) FROM"
-                        + " tbl_vendors where vendor_uname = '%s' "
-                        + "and vendor_pass = '%s';", username, password);
-            System.out.println(client_query);
-            System.out.println(vendor_query);
-
-            ResultSet rsc = stmt.executeQuery(client_query);
-            int clients = rsc.getRow() ;
-            rsc.close();
-            
-            ResultSet rsv = stmt.executeQuery(vendor_query);
-            int vendors = rsv.getRow() ;
-            rsv.close();
-            
-            System.out.println(clients + " : " + vendors);
+            String query = String.format("SELECT count(*) FROM"
+                    + " tbl_%ss where %s_uname = '%s' "
+                    + "and %s_pass = '%s';",  role, role, username, role, password);
+            System.out.println(query);
+            ResultSet rs = stmt.executeQuery(query);
+            rs.close();
             stmt.close();
             conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
         }
-        catch (SQLException | ClassNotFoundException e){
-                    System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    System.exit(0);
-        }  
         return role;
-    }  
+    }
 
-    
     /**
      * @param args the command line arguments
      */
@@ -226,10 +231,12 @@ public class LoginPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
