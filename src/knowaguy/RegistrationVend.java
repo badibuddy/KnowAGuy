@@ -201,7 +201,7 @@ public class RegistrationVend extends javax.swing.JFrame {
                 //Register the JDBC driver
                 Class.forName("org.postgresql.Driver");
                 //DB URL and port
-                String host = "jdbc:postgresql://localhost:5433/know_a_guy"; 
+                String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy"; 
                 //DB Credentials
                 String uName = "postgres";
                 String uPass = "p0stgr3s";
