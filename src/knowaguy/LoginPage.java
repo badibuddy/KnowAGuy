@@ -170,7 +170,7 @@ public class LoginPage extends javax.swing.JFrame {
             //Register the JDBC driver
             Class.forName("org.postgresql.Driver");
             //DB URL and port
-            String host = "jdbc:postgresql://localhost:5433/know_a_guy";
+            String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy";
             //DB Credentials
             String uName = "postgres";
             String uPass = "p0stgr3s";
@@ -181,9 +181,11 @@ public class LoginPage extends javax.swing.JFrame {
             stmt = conn.createStatement();
             String query = String.format("SELECT count(*) FROM"
                     + " tbl_%ss where %s_uname = '%s' "
-                    + "and %s_pass = '%s';",  role, role, username, role, password);
+                    + "and %s_pass = '%s';", role, role, username, role, password);
             System.out.println(query);
             ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            
             rs.close();
             stmt.close();
             conn.close();
