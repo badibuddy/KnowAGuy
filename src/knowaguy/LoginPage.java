@@ -25,6 +25,7 @@ public class LoginPage extends javax.swing.JFrame {
         initComponents();
     }
     String role, username, password;
+    int validity;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,6 +47,10 @@ public class LoginPage extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 102, 102));
+        setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        setForeground(new java.awt.Color(0, 102, 102));
+
 
         jLabel1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel1.setText("Username");
@@ -87,11 +92,7 @@ public class LoginPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(181, 181, 181))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,18 +108,22 @@ public class LoginPage extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(86, 86, 86)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(35, 35, 35)))
                 .addGap(145, 145, 145))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(40, 40, 40)
                 .addComponent(jLabel4)
-                .addGap(27, 27, 27)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -140,6 +145,14 @@ public class LoginPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        RegistrationPage rp = new RegistrationPage();
+        rp.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         username = jTextField1.getText().trim();
@@ -151,19 +164,26 @@ public class LoginPage extends javax.swing.JFrame {
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(rc, "Kindly provide a username and password.");
         } else {
-            validateCredentails();
+            validity = validateCredentails();
+            if (validity == 1 && role.equals("client")){
+                CustomerPortal cp = new CustomerPortal();
+                cp.setVisible(true);
+                dispose();
+            }
+            else if (validity == 1 && role.equals("vendor")){
+                VendorPortal vp = new VendorPortal();
+                vp.setVisible(true);
+                dispose();
+            }
+            else {
+                JOptionPane.showMessageDialog(rc, "Wrong username, password or login role.");
+            }
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        RegistrationPage rp = new RegistrationPage();
-        rp.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jLabel3MouseClicked
-
-    public String validateCredentails() {
+    public int validateCredentails() {
         Connection conn;
         Statement stmt;
         try {
@@ -177,15 +197,13 @@ public class LoginPage extends javax.swing.JFrame {
             //Open a connection
             conn = DriverManager.getConnection(host, uName, uPass);
             conn.setAutoCommit(false);
-            System.out.println("Connection opened successfully");
             stmt = conn.createStatement();
             String query = String.format("SELECT count(*) FROM"
                     + " tbl_%ss where %s_uname = '%s' "
                     + "and %s_pass = '%s';", role, role, username, role, password);
-            System.out.println(query);
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
-            
+            validity = rs.getInt("count");
             rs.close();
             stmt.close();
             conn.close();
@@ -193,7 +211,7 @@ public class LoginPage extends javax.swing.JFrame {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        return role;
+        return validity;
     }
 
     /**
