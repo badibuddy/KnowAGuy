@@ -5,6 +5,10 @@
  */
 package knowaguy;
 
+import java.util.Date;
+import java.sql.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Lulu
@@ -17,7 +21,9 @@ public class CustomerPortal extends javax.swing.JFrame {
     public CustomerPortal() {
         initComponents();
     }
+    public static String selection_, startDate, endDate;
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,11 +163,56 @@ public class CustomerPortal extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    
+    selection_ = jList1.getSelectedValue().toString();
+    startDate = jFormattedTextField1.getText().toString();
+    endDate = jFormattedTextField2.getText().toString();
+    search();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
+     public void search(){
+            Connection conn;
+            Statement stmt;
+            try{
+                //Register the JDBC driver
+                Class.forName("org.postgresql.Driver");
+                //DB URL and port
+                String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy";  
+                //DB Credentials
+                String uName = "postgres";
+                String uPass = "p0stgr3s";
+
+                //Open a connection
+                conn = DriverManager.getConnection(host,uName,uPass);
+                System.out.println("Connection opened successfully");
+                stmt = conn.createStatement();
+                String sql = String.format("SELECT * FROM tbl_vendors "
+                        + "where service_category = '{%s}'"
+                        + ";", selection_ );
+                System.out.println(sql);
+                ResultSet results = stmt.executeQuery(sql);
+                
+                stmt.close();
+                conn.close();
+                System.out.println("Connection closed successfully");
+
+                }   catch (SQLException | ClassNotFoundException e){
+                CustomerPortal cp = new CustomerPortal();
+                if  (e.getMessage().contains("returned when none")) {
+                    System.err.println(e.getClass().getName()+": "+e.getMessage());
+                    JOptionPane.showMessageDialog(cp,"There are no " + selection_ + "(s) at the moment");
+                }
+                else {
+                    System.err.println(e.getClass().getName()+": "+e.getMessage());
+                    System.exit(0);
+                }
+            }
+    
+     }
+    
     /**
      * @param args the command line arguments
      */
