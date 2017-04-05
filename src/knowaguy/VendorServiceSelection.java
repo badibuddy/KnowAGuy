@@ -73,6 +73,9 @@ public class VendorServiceSelection extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Please select the services you can offer and provide a daily rate (KES):");
 
+        jTextField1.setToolTipText("");
+        jTextField1.setName("rate"); // NOI18N
+
         jCheckBox2.setText("House Keeper");
 
         jCheckBox3.setText("Gardener");
@@ -82,7 +85,6 @@ public class VendorServiceSelection extends javax.swing.JFrame {
         jCheckBox5.setText("Chef");
 
         jButton1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
-
         jButton1.setText("SUBMIT");
 
         jCheckBox6.setText("Plumber");
@@ -102,14 +104,14 @@ public class VendorServiceSelection extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 468, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jCheckBox5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jCheckBox4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jCheckBox3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBox2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                    .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, Short.MAX_VALUE)
                     .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,9 +217,9 @@ public class VendorServiceSelection extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-//    private void jCheckBox1(java.awt.event.MouseEvent evt) {
-//    jTextField1.setEditable(jCheckBox1.isSelected());
-//}
+    private void jCheckBox1(java.awt.event.MouseEvent evt) {
+    jTextField1.setEditable(jCheckBox1.isSelected());
+    };
 //    
 //    ItemListener itemListener = new ItemListener()
 //        {

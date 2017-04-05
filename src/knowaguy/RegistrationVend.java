@@ -56,7 +56,7 @@ public class RegistrationVend extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Brief Description");
+        jLabel5.setText("Experience");
         jLabel5.setToolTipText("");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel5.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
@@ -93,7 +93,6 @@ public class RegistrationVend extends javax.swing.JFrame {
         jTextArea1.setTabSize(4);
         jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jTextArea1);
-
 
 
         jButton1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
@@ -195,7 +194,16 @@ public class RegistrationVend extends javax.swing.JFrame {
         passwd = jPasswordField1.getText().trim();
         mobilenum = jTextField2.getText();
         description = jTextArea1.getText();
-        isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
+        
+//        if (description.isEmpty()) {
+//            JOptionPane.showMessageDialog(this,"Kindly input a descrition of your skills");
+//            isValid = false;
+//            else () {
+//            isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
+//                }
+//            }
+//            
+       isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
         
         if (isValid == true){
             registerVendor();
