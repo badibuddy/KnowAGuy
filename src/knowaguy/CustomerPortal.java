@@ -61,7 +61,7 @@ public class CustomerPortal extends javax.swing.JFrame {
         jCheckBox4.setText("Security Guards");
 
         jCheckBox5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jCheckBox5.setText("House Cleaning Services");
+        jCheckBox5.setText("House Keeping Services");
 
         jCheckBox6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jCheckBox6.setText("Gardening");
@@ -101,7 +101,7 @@ public class CustomerPortal extends javax.swing.JFrame {
                         .addComponent(jCheckBox3)
                         .addGap(44, 44, 44)
                         .addComponent(jCheckBox7)))
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
