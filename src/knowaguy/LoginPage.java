@@ -150,9 +150,7 @@ public class LoginPage extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,7 +179,7 @@ public class LoginPage extends javax.swing.JFrame {
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(rc, "Kindly provide a username and password.");
         } else {
-            validity = validateCredentails();
+            validity = validateCredentials();
             if (validity == 1 && role.equals("client")){
                 CustomerPortal cp = new CustomerPortal();
                 cp.setVisible(true);
@@ -200,7 +198,7 @@ public class LoginPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
-    public int validateCredentails() {
+    public int validateCredentials() {
         Connection conn;
         Statement stmt;
         try {

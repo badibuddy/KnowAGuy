@@ -234,7 +234,7 @@ public class RegistrationCust extends javax.swing.JFrame {
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("INSERT INTO tbl_clients "
-                        + "(client_fname,client_lname,client_uname,client_pass,mobile_number,client_location) "
+                        + "(client_fname,client_lname,client_uname,client_pass,mobile_number,location) "
                         + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", fname, lname, username, passwd, mobilenum, location );
                 System.out.println(sql);
                 stmt.executeUpdate(sql);

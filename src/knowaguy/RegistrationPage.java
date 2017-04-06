@@ -65,7 +65,7 @@ public class RegistrationPage extends javax.swing.JFrame {
         jLabel7.setText("Select Role:");
 
         jComboBox1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CLIENT", "VENDOR" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CUSTOMER", "VENDOR" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
