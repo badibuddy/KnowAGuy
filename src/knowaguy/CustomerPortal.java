@@ -21,8 +21,8 @@ public class CustomerPortal extends javax.swing.JFrame {
     public CustomerPortal() {
         initComponents();
     }
-    public static String selection_, startDate, endDate, experience, mob_num, name;
-
+    public static String selection_, startDate, endDate, experience, mob_num, first_name, last_name, rate;
+    public static CustomerPortal cp = new CustomerPortal();
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,11 +52,22 @@ public class CustomerPortal extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jButton2.setText("SEARCH");
+	jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+	});
 
         jButton1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
         jButton1.setText("LOG OUT");
 
-        jLabel1.setFont(new java.awt.Font("URW Chancery L", 0, 36)); // NOI18N
+	jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+	});
+        
+	jLabel1.setFont(new java.awt.Font("URW Chancery L", 0, 36)); // NOI18N
         jLabel1.setForeground(java.awt.Color.white);
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("KNOW A GUY");
@@ -147,27 +158,31 @@ public class CustomerPortal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         LoginPage lp = new LoginPage();
         lp.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-
+//    private String getdate(){
+//          DateFormat format = new SimpleDateFormat("MM/DD/YYYY"); //display your format.
+//          Date date = new Date();//puts the date in variable.
+//            return dateformat.format(date); //returns the format to the date variable.
+//    }
+    
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    selection_ = jList1.getSelectedValue().toString();
-    startDate = jFormattedTextField1.getText().toString();
-    endDate = jFormattedTextField2.getText().toString();
-    
-    
-    if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
-        } 
-        else 
-        {
+        selection_ = jList1.getSelectedValue().toString().trim();
+        startDate = jFormattedTextField1.getText().toString().trim();
+        endDate = jFormattedTextField2.getText().toString().trim();
+                
+//        if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) 
+//        {
+//            JOptionPane.showMessageDialog(cp, "Kindly select one service category and provide a start date and an end date.");
+//        } 
+//        else 
+//        {
         search();  
-        }
+//        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
      public void search(){
@@ -186,17 +201,18 @@ public class CustomerPortal extends javax.swing.JFrame {
                 conn = DriverManager.getConnection(host,uName,uPass);
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
-                String sql = String.format("SELECT * FROM tbl_vendors "
-                        + "where service_category = '{%s}'"
+                String sql = String.format("SELECT vendor_id, vendor_fname, vendor_lname, mobile_number, service_category "
+			+ " FROM tbl_vendors "
+                        + "where service_category ?| array['%s']"
                         + ";", selection_ );
                 System.out.println(sql);
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) 
                 {
-                    experience = rs.getString("description");
-                    name = rs.getString("vendor_uname");
-//                    int marks = rs.getInt("MARKS");
-                    mob_num = rs.getString("vendor_uname");
+                    first_name = rs.getString("vendor_fname");
+                    last_name = rs.getString("vendor_lname");
+                    mob_num = rs.getString("mobile_number");
+                    rate = rs.getString("service_category");
                 }
                 stmt.close();
                 conn.close();
@@ -204,7 +220,6 @@ public class CustomerPortal extends javax.swing.JFrame {
 
                 }   catch (SQLException | ClassNotFoundException e){
                 
-                CustomerPortal cp = new CustomerPortal();
                
                 if  (e.getMessage().contains("returned when none")) {
                     System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -217,7 +232,9 @@ public class CustomerPortal extends javax.swing.JFrame {
                     System.exit(0);
                 }
                 
-                System.out.print (name + ":" + mob_num + ":" + experience);
+                System.out.print (first_name + ":" + last_name + ":" + ":" + mob_num + ":" + experience);
+                CustomerServiceSelection css = new CustomerServiceSelection();
+                css.isVisible();
             }
      }
     
