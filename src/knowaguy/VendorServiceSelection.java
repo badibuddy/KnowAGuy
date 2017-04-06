@@ -360,8 +360,9 @@ public class VendorServiceSelection extends javax.swing.JFrame {
             }
             else{
             updateVendor();
-            if (updated == true){VendorPortal vp = new VendorPortal();
-                vp.setVisible(true);
+            if (updated == true){
+                LoginPage lp = new LoginPage();
+                lp.setVisible(true);
                 dispose(); }
             else{
                JOptionPane.showMessageDialog(vss, "\t\t\tSorry, unexpected system failure, please try again.");

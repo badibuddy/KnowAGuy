@@ -181,7 +181,7 @@ public class LoginPage extends javax.swing.JFrame {
         } else {
             validity = validateCredentials();
             if (validity == 1 && role.equals("client")){
-                CustomerPortal cp = new CustomerPortal();
+                CustomerPortal cp = new CustomerPortal(uid);
                 cp.setVisible(true);
                 dispose();
             }

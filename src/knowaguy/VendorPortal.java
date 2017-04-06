@@ -83,12 +83,11 @@ public class VendorPortal extends javax.swing.JFrame {
             String uPass = "p0stgr3s";
             //Open a connection
             conn = DriverManager.getConnection(host, uName, uPass);
-            conn.setAutoCommit(false);
             stmt = conn.createStatement();
-            String query = String.format("Delete from tbl_vendors "
+            String query = String.format("DELETE FROM tbl_vendors "
                     + "where vendor_id = %d;", vid);
             System.out.println(query);
-            stmt.executeUpdate(query);
+            stmt.execute(query);
             stmt.close();
             conn.close();
             success = true;
