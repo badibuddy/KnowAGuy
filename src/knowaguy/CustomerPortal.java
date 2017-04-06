@@ -212,11 +212,15 @@ public class CustomerPortal extends javax.swing.JFrame {
                     first_name = rs.getString("vendor_fname");
                     last_name = rs.getString("vendor_lname");
                     mob_num = rs.getString("mobile_number");
-                    rate = rs.getString("service_category");
+//                    rate = rs.getString("service_category");
                 }
                 stmt.close();
                 conn.close();
                 System.out.println("Connection closed successfully");
+                System.out.print (first_name + ":" + last_name + ":" + ":" + mob_num + ":" + experience);
+                CustomerServiceSelection css = new CustomerServiceSelection();
+                css.isVisible();
+                dispose();
 
                 }   catch (SQLException | ClassNotFoundException e){
                 
@@ -226,15 +230,8 @@ public class CustomerPortal extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(cp,"There are no " + selection_ + "(s) at the moment");
                 }
                 
-                else 
-                {
-                    System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    System.exit(0);
-                }
-                
-                System.out.print (first_name + ":" + last_name + ":" + ":" + mob_num + ":" + experience);
-                CustomerServiceSelection css = new CustomerServiceSelection();
-                css.isVisible();
+              
+               
             }
      }
     
