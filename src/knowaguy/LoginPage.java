@@ -25,7 +25,7 @@ public class LoginPage extends javax.swing.JFrame {
         initComponents();
     }
     String role, username, password;
-    int validity;
+    int validity, uid;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -186,7 +186,7 @@ public class LoginPage extends javax.swing.JFrame {
                 dispose();
             }
             else if (validity == 1 && role.equals("vendor")){
-                VendorPortal vp = new VendorPortal();
+                VendorPortal vp = new VendorPortal(uid);
                 vp.setVisible(true);
                 dispose();
             }
@@ -213,12 +213,15 @@ public class LoginPage extends javax.swing.JFrame {
             conn = DriverManager.getConnection(host, uName, uPass);
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
-            String query = String.format("SELECT count(*) FROM"
+            String query = String.format("SELECT count(*), %s_id FROM"
                     + " tbl_%ss where %s_uname = '%s' "
-                    + "and %s_pass = '%s';", role, role, username, role, password);
+                    + "and %s_pass = '%s' group by %s_id;", 
+                    role, role, role, username, role, password, role);
             ResultSet rs = stmt.executeQuery(query);
-            rs.next();
+            if(rs.next()){
             validity = rs.getInt("count");
+            uid = rs.getInt(String.format("%s_id",role));
+            }
             rs.close();
             stmt.close();
             conn.close();
