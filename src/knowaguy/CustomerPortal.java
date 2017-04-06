@@ -8,18 +8,27 @@ package knowaguy;
 import java.util.Date;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author Lulu
  */
 public class CustomerPortal extends javax.swing.JFrame {
+    public int custID;
 
     /**
      * Creates new form CustomerPortal
      */
     public CustomerPortal() {
         initComponents();
+    }    
+    public CustomerPortal(int cust_ID) {
+        initComponents();
+        custID = cust_ID;
+
     }
     public static String selection_, startDate, endDate, experience, mob_num, name;
 
@@ -52,9 +61,19 @@ public class CustomerPortal extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jButton2.setText("SEARCH");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
         jButton1.setText("LOG OUT");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("URW Chancery L", 0, 36)); // NOI18N
         jLabel1.setForeground(java.awt.Color.white);
@@ -65,6 +84,8 @@ public class CustomerPortal extends javax.swing.JFrame {
         jLabel2.setForeground(java.awt.Color.white);
         jLabel2.setText("Please select a service from the list below and indicate the start and end dates");
 
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
+
         jList1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Nanny", "House keeper", "Gardener", "Gaurd", "Chef", "Plumber", "Electrician", "Carpenter", "Mechanic", "Fumigator" };
@@ -73,6 +94,8 @@ public class CustomerPortal extends javax.swing.JFrame {
         });
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jList1);
+
+        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
 
         jLabel3.setForeground(java.awt.Color.white);
         jLabel3.setText("Start date");
@@ -170,7 +193,7 @@ public class CustomerPortal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-     public void search(){
+     public void search() throws ParseException{
             Connection conn;
             Statement stmt;
             try{
@@ -187,7 +210,7 @@ public class CustomerPortal extends javax.swing.JFrame {
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("SELECT * FROM tbl_vendors "
-                        + "where service_category = '{%s}'"
+                        + "where service_category ?| array['%s']"
                         + ";", selection_ );
                 System.out.println(sql);
                 ResultSet rs = stmt.executeQuery(sql);
@@ -195,12 +218,17 @@ public class CustomerPortal extends javax.swing.JFrame {
                 {
                     experience = rs.getString("description");
                     name = rs.getString("vendor_uname");
-//                    int marks = rs.getInt("MARKS");
-                    mob_num = rs.getString("vendor_uname");
+                    mob_num = rs.getString("mobile_num");
+//                    JSONParser parser = new JSONParser(); 
+//                    JSONObject services = parser.parse(rs.getString("service_category"));
+//                    services.getString(selection_)
+                    System.out.print (name + " : " + mob_num + " : " + experience );
+
                 }
                 stmt.close();
                 conn.close();
                 System.out.println("Connection closed successfully");
+                
 
                 }   catch (SQLException | ClassNotFoundException e){
                 
@@ -217,7 +245,6 @@ public class CustomerPortal extends javax.swing.JFrame {
                     System.exit(0);
                 }
                 
-                System.out.print (name + ":" + mob_num + ":" + experience);
             }
      }
     
