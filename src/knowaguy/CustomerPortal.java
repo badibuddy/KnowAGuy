@@ -5,6 +5,10 @@
  */
 package knowaguy;
 
+import java.util.Date;
+import java.sql.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Lulu
@@ -17,7 +21,9 @@ public class CustomerPortal extends javax.swing.JFrame {
     public CustomerPortal() {
         initComponents();
     }
+    public static String selection_, startDate, endDate, experience, mob_num, name;
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,19 +52,9 @@ public class CustomerPortal extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jButton2.setText("SEARCH");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
 
         jButton1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
         jButton1.setText("LOG OUT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("URW Chancery L", 0, 36)); // NOI18N
         jLabel1.setForeground(java.awt.Color.white);
@@ -157,11 +153,74 @@ public class CustomerPortal extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+    selection_ = jList1.getSelectedValue().toString();
+    startDate = jFormattedTextField1.getText().toString();
+    endDate = jFormattedTextField2.getText().toString();
     
+    
+    if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
+        } 
+        else 
+        {
+        search();  
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+     public void search(){
+            Connection conn;
+            Statement stmt;
+            try{
+                //Register the JDBC driver
+                Class.forName("org.postgresql.Driver");
+                //DB URL and port
+                String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy";  
+                //DB Credentials
+                String uName = "postgres";
+                String uPass = "p0stgr3s";
+
+                //Open a connection
+                conn = DriverManager.getConnection(host,uName,uPass);
+                System.out.println("Connection opened successfully");
+                stmt = conn.createStatement();
+                String sql = String.format("SELECT * FROM tbl_vendors "
+                        + "where service_category = '{%s}'"
+                        + ";", selection_ );
+                System.out.println(sql);
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) 
+                {
+                    experience = rs.getString("description");
+                    name = rs.getString("vendor_uname");
+//                    int marks = rs.getInt("MARKS");
+                    mob_num = rs.getString("vendor_uname");
+                }
+                stmt.close();
+                conn.close();
+                System.out.println("Connection closed successfully");
+
+                }   catch (SQLException | ClassNotFoundException e){
+                
+                CustomerPortal cp = new CustomerPortal();
+               
+                if  (e.getMessage().contains("returned when none")) {
+                    System.err.println(e.getClass().getName()+": "+e.getMessage());
+                    JOptionPane.showMessageDialog(cp,"There are no " + selection_ + "(s) at the moment");
+                }
+                
+                else 
+                {
+                    System.err.println(e.getClass().getName()+": "+e.getMessage());
+                    System.exit(0);
+                }
+                
+                System.out.print (name + ":" + mob_num + ":" + experience);
+            }
+     }
+    
     /**
      * @param args the command line arguments
      */
