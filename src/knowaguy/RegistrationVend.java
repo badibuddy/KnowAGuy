@@ -15,13 +15,16 @@ import javax.swing.JOptionPane;
  */
 public class RegistrationVend extends javax.swing.JFrame {
 
+
     /**
      * Creates new form RegistrationVend
      */
     public RegistrationVend() {
         initComponents();
+
     }
     public static String fname, lname, username, mobilenum, passwd, description;
+    public static int vendorId;
     static boolean isValid, registered;
 
     /**
@@ -210,8 +213,8 @@ public class RegistrationVend extends javax.swing.JFrame {
             if (registered == true){
                 RegistrationVend rv = new RegistrationVend();   
                 JOptionPane.showMessageDialog(rv, "\t\t\tWelcome to know a guy\nYou have successfully signed up");
-                VendorServiceSelection vss = new VendorServiceSelection();
-                vss.setVisible(true);
+                VendorServiceSelection vss = new VendorServiceSelection(vendorId);
+                vss.setVisible(true);                
                 dispose();        
             }
         } 
@@ -222,6 +225,7 @@ public class RegistrationVend extends javax.swing.JFrame {
             registered = false;
             Connection conn;
             Statement stmt;
+            String generatedColumns[] = {"vendor_id"};
             try{
                 //Register the JDBC driver
                 Class.forName("org.postgresql.Driver");
@@ -236,14 +240,17 @@ public class RegistrationVend extends javax.swing.JFrame {
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("INSERT INTO tbl_vendors "
-                        + "(vendor_fname,vendor_lname,vendor_uname,vendor_pass,mobile_number,description) "
-                        + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", fname, lname, username, passwd, mobilenum, description);
-                System.out.println(sql);
-                stmt.executeUpdate(sql);
+                        + "(vendor_fname,vendor_lname,vendor_uname,"
+                        + "vendor_pass,mobile_number,description) "
+                        + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", 
+                        fname, lname, username, passwd, mobilenum, description);
+                stmt.executeUpdate(sql, generatedColumns);
+                ResultSet rs = stmt.getGeneratedKeys();
+                if(rs.next())
+                    vendorId = rs.getInt(1);
                 stmt.close();
                 conn.close();
                 registered = true;
-                System.out.println("Connection closed successfully");
 
             }
             catch (SQLException | ClassNotFoundException e){
