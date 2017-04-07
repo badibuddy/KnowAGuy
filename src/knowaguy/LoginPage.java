@@ -52,7 +52,7 @@ public class LoginPage extends javax.swing.JFrame {
         setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         setForeground(new java.awt.Color(0, 102, 102));
 
-        jPanel1.setBackground(new java.awt.Color(0, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
