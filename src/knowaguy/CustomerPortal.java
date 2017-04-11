@@ -85,7 +85,6 @@ public class CustomerPortal extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Select a service from the list below and indicate start and end dates");
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyy"))));
         jFormattedTextField1.setToolTipText("");
         jFormattedTextField1.setActionCommand("<Not Set>");
 
@@ -203,7 +202,7 @@ public class CustomerPortal extends javax.swing.JFrame {
     valid = true;
     dateRegex = "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$";
 
-    if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) {
+    if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty() || selection_ == null) {
         valid = false;    
         JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
         } 
@@ -219,7 +218,7 @@ public class CustomerPortal extends javax.swing.JFrame {
         {
         try {  
             topServices = search();
-            if (topServices.isEmpty()){
+            if (topServices.isEmpty() ){
                 JOptionPane.showMessageDialog(this, "We have no " + selection_ + "at the moment.");
             }
             else{

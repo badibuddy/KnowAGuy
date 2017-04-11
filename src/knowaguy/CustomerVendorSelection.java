@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,7 +26,7 @@ import javax.swing.JRadioButton;
  * @author lulukarega
  */
 public class CustomerVendorSelection extends javax.swing.JFrame {
-    public int clientID, amount_charged, days;
+    public int clientID, days, amount_charged;
     public List availableVendors;
     public String start_date, end_date, service, vendor_name, payment_mode;
     /**
@@ -250,11 +249,12 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             }else
             {SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
             try {
-                days = myFormat.parse(start_date).getDay()- myFormat.parse(end_date).getDay();
+                days = myFormat.parse(end_date).getDate()- myFormat.parse(start_date).getDate();
             } catch (ParseException ex) {
                 Logger.getLogger(CustomerVendorSelection.class.getName()).log(Level.SEVERE, null, ex);
             }
-            amount_charged = days == 0 ? amount_charged : amount_charged * days;
+            System.out.println("Days : " + days);
+            amount_charged = (days == 0) ? amount_charged : amount_charged * days;
             createTransaction();}
         }
         
