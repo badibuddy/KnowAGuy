@@ -10,8 +10,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -22,7 +27,7 @@ import javax.swing.JRadioButton;
  * @author lulukarega
  */
 public class CustomerVendorSelection extends javax.swing.JFrame {
-    public int clientID, amount_charged;
+    public int clientID, amount_charged, days;
     public List availableVendors;
     public String start_date, end_date, service, vendor_name, payment_mode;
     /**
@@ -239,7 +244,18 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             amount_charged = Integer.parseInt(vendorArray[3]);
             vendor_name = vendorArray[0];
             payment_mode = jList1.getSelectedValue();
-            createTransaction();
+            if (payment_mode == null || payment_mode.isEmpty())
+            {
+            JOptionPane.showMessageDialog(this,"Kindly select a payment method.");
+            }else
+            {SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                days = myFormat.parse(start_date).getDay()- myFormat.parse(end_date).getDay();
+            } catch (ParseException ex) {
+                Logger.getLogger(CustomerVendorSelection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            amount_charged = days == 0 ? amount_charged : amount_charged * days;
+            createTransaction();}
         }
         
         
@@ -301,7 +317,7 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                 String sql = String.format("INSERT INTO tbl_services"
                         + "(client_fk,vendor_fk,service_name,"
                         + "start_date,end_date,amount_charged,mode_of_payment) "
-                        + "VALUES ('%s', (SELECT vendor_id from tbl_vendors where vendor_uname = '%s'),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), '%s', '%s');", 
+                        + "VALUES (%d, (SELECT vendor_id from tbl_vendors where vendor_uname = '%s'),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), %d, '%s');", 
                         clientID, vendor_name, service, start_date, end_date, amount_charged ,payment_mode);
                 System.out.println(sql);
                 stmt.executeUpdate(sql, generatedColumns);
