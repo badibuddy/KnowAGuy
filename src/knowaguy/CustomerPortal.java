@@ -7,12 +7,13 @@ package knowaguy;
 
 import java.util.Date;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 /**
  *
@@ -20,7 +21,9 @@ import org.json.JSONObject;
  */
 public class CustomerPortal extends javax.swing.JFrame {
     public int custID, rate;
-
+    public static String services, selection_, startDate, endDate, experience, mob_num, name;
+    public List topServices = new ArrayList();
+ 
     /**
      * Creates new form CustomerPortal
      */
@@ -32,8 +35,6 @@ public class CustomerPortal extends javax.swing.JFrame {
         custID = cust_ID;
 
     }
-    public static String services, selection_, startDate, endDate, experience, mob_num, name;
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,9 +193,9 @@ public class CustomerPortal extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    selection_ = jList1.getSelectedValue().toString();
-    startDate = jFormattedTextField1.getText().toString();
-    endDate = jFormattedTextField2.getText().toString();
+    selection_ = jList1.getSelectedValue();
+    startDate = jFormattedTextField1.getText();
+    endDate = jFormattedTextField2.getText();
     
     
     if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) {
@@ -203,7 +204,15 @@ public class CustomerPortal extends javax.swing.JFrame {
         else 
         {
         try {  
-            search();
+            topServices = search();
+            if (topServices.isEmpty()){
+                JOptionPane.showMessageDialog(this, "We have no " + selection_ + "at the moment.");
+            }
+            else{
+                CustomerVendorSelection cvs = new CustomerVendorSelection(custID, topServices);
+                cvs.setVisible(true);
+                dispose();
+            }
         } catch (JSONException ex) {
             Logger.getLogger(CustomerPortal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -218,9 +227,11 @@ public class CustomerPortal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jLabel5MouseClicked
 
-     public void search() throws JSONException {
+     public List search() throws JSONException {
             Connection conn;
             Statement stmt;
+            List availableServices = new ArrayList();
+
             try{
                 //Register the JDBC driver
                 Class.forName("org.postgresql.Driver");
@@ -235,43 +246,33 @@ public class CustomerPortal extends javax.swing.JFrame {
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("SELECT * FROM tbl_vendors "
-                        + "where service_category ?| array['%s']"
-                        + ";", selection_ );
-                System.out.println(sql);
+                        + "where service_category ?| array['%s'] limit 5"
+                    + ";", selection_ );
                 ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) 
-                {
+                while(rs.next()){
                     experience = rs.getString("description");
                     name = rs.getString("vendor_uname");
                     mob_num = rs.getString("mobile_number");
                     services= rs.getString("service_category");
                     JSONObject jsonObj = new JSONObject(services);
                     rate = jsonObj.getInt(selection_);
-                    System.out.print (name + " : " + mob_num + " : " + experience + " : " + rate);
-
-                }
+                    String offer =  name + " : " + mob_num + " : " + 
+                            experience + " : " + rate;
+                    
+                    availableServices.add(offer);
+                    }
                 stmt.close();
                 conn.close();
-                System.out.println("Connection closed successfully");
                 
 
                 }   catch (SQLException | ClassNotFoundException e){
-                
-                CustomerPortal cp = new CustomerPortal();
                
-                if  (e.getMessage().contains("returned when none")) {
                     System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    JOptionPane.showMessageDialog(cp,"There are no " + selection_ + "(s) at the moment");
-                }
-                
-                else 
-                {
-                    System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    System.exit(0);
-                }
-                
+                    JOptionPane.showMessageDialog(this,"We seem to have a technical problem, \nplease try again."); 
             }
-     }
+            
+            return availableServices;
+    }
     
     /**
      * @param args the command line arguments
