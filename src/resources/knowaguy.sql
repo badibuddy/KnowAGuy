@@ -39,5 +39,5 @@ CREATE TABLE tbl_services(
   date_added TIMESTAMP DEFAULT current_timestamp
 );
 
-
+ALTER TABLE tbl_vendors ADD COLUMN vendor_rating INTEGER default 5;
 

@@ -5,16 +5,17 @@
  */
 package knowaguy;
 
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ResourceBundle.Control;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import org.json.simple.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class VendorServiceSelection extends javax.swing.JFrame {
@@ -70,7 +71,7 @@ public class VendorServiceSelection extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Lucida Calligraphy", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -124,9 +125,7 @@ public class VendorServiceSelection extends javax.swing.JFrame {
         });
 
         jTextField3.setEnabled(false);
-
         jTextField4.setEnabled(false);
-
         jTextField5.setEnabled(false);
 
         jCheckBox5.setForeground(new java.awt.Color(255, 255, 255));
@@ -173,6 +172,7 @@ public class VendorServiceSelection extends javax.swing.JFrame {
             }
         });
 
+        jTextField8.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jTextField8.setEnabled(false);
 
         jCheckBox9.setForeground(new java.awt.Color(255, 255, 255));
@@ -351,14 +351,19 @@ public class VendorServiceSelection extends javax.swing.JFrame {
                 combo =  getJson(checkBoxes[i], textFields[i]);
                 if  ( combo != null && combo.length != 0 )
                 {
-                servicesOffered.put(combo[0], combo[1]);
+                    try {
+                        servicesOffered.put(combo[0], combo[1]);
+                    } catch (JSONException ex) {
+                        Logger.getLogger(VendorServiceSelection.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             } 
 
-            if (servicesOffered.isEmpty()){
+            if (servicesOffered.length() == 0){
                 JOptionPane.showMessageDialog(vss, "\t\t\tSelect at least one service\nand provide a rate for each selected service");
             }
-            else{
+            else
+            {
             updateVendor();
             if (updated == true){
                 LoginPage lp = new LoginPage();

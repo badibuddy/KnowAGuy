@@ -5,14 +5,14 @@
  */
 package knowaguy;
 
-import java.util.Date;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 /**
  *
@@ -20,7 +20,11 @@ import org.json.JSONObject;
  */
 public class CustomerPortal extends javax.swing.JFrame {
     public int custID, rate;
+    public static String services, selection_, startDate, endDate, experience, mob_num, name, dateRegex;
+    public List topServices = new ArrayList();
+    public boolean valid;
 
+ 
     /**
      * Creates new form CustomerPortal
      */
@@ -32,8 +36,6 @@ public class CustomerPortal extends javax.swing.JFrame {
         custID = cust_ID;
 
     }
-    public static String services, selection_, startDate, endDate, experience, mob_num, name;
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,7 +85,9 @@ public class CustomerPortal extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Select a service from the list below and indicate start and end dates");
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyy"))));
+        jFormattedTextField1.setToolTipText("");
+        jFormattedTextField1.setActionCommand("<Not Set>");
 
         jList1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
@@ -96,7 +100,7 @@ public class CustomerPortal extends javax.swing.JFrame {
         jList1.setVisibleRowCount(5);
         jScrollPane1.setViewportView(jList1);
 
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
+        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
 
         jLabel3.setForeground(java.awt.Color.white);
         jLabel3.setText("Start date");
@@ -122,9 +126,6 @@ public class CustomerPortal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(130, 130, 130)
@@ -140,12 +141,13 @@ public class CustomerPortal extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jFormattedTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jFormattedTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(40, 99, Short.MAX_VALUE)))
+                        .addGap(40, 99, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(174, 174, 174))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,18 +194,39 @@ public class CustomerPortal extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    selection_ = jList1.getSelectedValue().toString();
-    startDate = jFormattedTextField1.getText().toString();
-    endDate = jFormattedTextField2.getText().toString();
     
-    
+        
+        
+    selection_ = jList1.getSelectedValue();
+    startDate = jFormattedTextField1.getText();
+    endDate = jFormattedTextField2.getText();
+    valid = true;
+    dateRegex = "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$";
+
     if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
+        valid = false;    
+        JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
         } 
-        else 
+    if (!startDate.matches(dateRegex)) {
+            valid = false;
+            JOptionPane.showMessageDialog(this, "Please enter valid start date : dd/mm/yyyy.");
+        } 
+    if (!endDate.matches(dateRegex)) {
+            valid = false;
+            JOptionPane.showMessageDialog(this, "Please enter valid end date : dd/mm/yyyy.");
+        }     
+    if (valid)
         {
         try {  
-            search();
+            topServices = search();
+            if (topServices.isEmpty()){
+                JOptionPane.showMessageDialog(this, "We have no " + selection_ + "at the moment.");
+            }
+            else{
+                CustomerVendorSelection cvs = new CustomerVendorSelection(custID, topServices, startDate, endDate, selection_);
+                cvs.setVisible(true);
+                dispose();
+            }
         } catch (JSONException ex) {
             Logger.getLogger(CustomerPortal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -218,9 +241,11 @@ public class CustomerPortal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jLabel5MouseClicked
 
-     public void search() throws JSONException {
+     public List search() throws JSONException {
             Connection conn;
             Statement stmt;
+            List availableServices = new ArrayList();
+
             try{
                 //Register the JDBC driver
                 Class.forName("org.postgresql.Driver");
@@ -235,43 +260,33 @@ public class CustomerPortal extends javax.swing.JFrame {
                 System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("SELECT * FROM tbl_vendors "
-                        + "where service_category ?| array['%s']"
-                        + ";", selection_ );
-                System.out.println(sql);
+                        + "where service_category ?| array['%s'] limit 5"
+                    + ";", selection_ );
                 ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) 
-                {
+                while(rs.next()){
                     experience = rs.getString("description");
                     name = rs.getString("vendor_uname");
                     mob_num = rs.getString("mobile_number");
                     services= rs.getString("service_category");
                     JSONObject jsonObj = new JSONObject(services);
                     rate = jsonObj.getInt(selection_);
-                    System.out.print (name + " : " + mob_num + " : " + experience + " : " + rate);
-
-                }
+                    String offer =  name + ":" + mob_num + ":" + 
+                            experience + ":" + rate;
+                    
+                    availableServices.add(offer);
+                    }
                 stmt.close();
                 conn.close();
-                System.out.println("Connection closed successfully");
                 
 
                 }   catch (SQLException | ClassNotFoundException e){
-                
-                CustomerPortal cp = new CustomerPortal();
                
-                if  (e.getMessage().contains("returned when none")) {
                     System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    JOptionPane.showMessageDialog(cp,"There are no " + selection_ + "(s) at the moment");
-                }
-                
-                else 
-                {
-                    System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    System.exit(0);
-                }
-                
+                    JOptionPane.showMessageDialog(this,"We seem to have a technical problem, \nplease try again."); 
             }
-     }
+            
+            return availableServices;
+    }
     
     /**
      * @param args the command line arguments
