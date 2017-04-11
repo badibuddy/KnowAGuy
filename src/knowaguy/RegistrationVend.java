@@ -265,7 +265,7 @@ public class RegistrationVend extends javax.swing.JFrame {
                 }
                 else {
                     System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    System.exit(0);
+                    JOptionPane.showMessageDialog(rv,"Sorry, we had a technical glitch. Please try again.");
                 }
             }
     }   
