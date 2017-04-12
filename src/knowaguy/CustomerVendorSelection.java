@@ -257,10 +257,6 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             amount_charged = (days == 0) ? amount_charged : amount_charged * days;
             createTransaction();}
         }
-        
-        
-        
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
