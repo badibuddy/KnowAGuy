@@ -10,6 +10,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
@@ -19,7 +22,7 @@ import javax.swing.JTabbedPane;
  */
 public class VendorPortal extends javax.swing.JFrame {
     public int vendorID;
-    public static String lname, fname, num;
+    public static String lname, fname, num, service, username, startDate, endDate, cost;
     public boolean deleted, updated;
 
     /**
@@ -132,6 +135,54 @@ public class VendorPortal extends javax.swing.JFrame {
         return success;
     }   
     
+    public List fetchHistory(int uid, String role) {
+        String alias = role.substring(0, 1); 
+        Connection conn;
+        Statement stmt;
+        List past5 = new ArrayList();
+
+        try {
+            //Register the JDBC driver
+            Class.forName("org.postgresql.Driver");
+            //DB URL and port
+            String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy";
+            //DB Credentials
+            String uName = "postgres";
+            String uPass = "p0stgr3s";
+            //Open a connection
+            conn = DriverManager.getConnection(host, uName, uPass);
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+            String sql = String.
+                    format("SELECT * FROM tbl_services as s "
+                    + "JOIN tbl_%ss as %s "
+                    + "ON s.%s_fk = %s.%s_id "
+                    + "where s.%s_fk = %d "
+                    + "ORDER BY s.start_date DESC limit 5;",
+                    role, alias,role, alias,role ,role,uid);
+            ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    service = rs.getString("service_name");
+                    username = rs.getString(String.format("%s_fname", role)) 
+                            + " " + rs.getString(String.format("%s_lname", role));
+                    cost= rs.getString("amount_charged");
+                    startDate= rs.getString("start_date");
+                    endDate= rs.getString("end_date");
+                    String history =  String.format("<html>%s Name: " 
+                            + username + ", Service: " + service 
+                            + ", Cost: " + cost + ",<br>Start Date: " + 
+                            startDate + ", End Date: " + endDate +"<html>", role);
+                    past5.add(history);
+                    }            
+            stmt.close();
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return past5;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -230,6 +281,8 @@ public class VendorPortal extends javax.swing.JFrame {
         });
 
         jTextField1.setEnabled(false);
+
+        jTextField2.setEnabled(false);
 
         jTextField3.setEnabled(false);
 
@@ -458,8 +511,22 @@ public class VendorPortal extends javax.swing.JFrame {
         // TODO add your handling c
         JTabbedPane tabSource = (JTabbedPane) evt.getSource();
         String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
-        System.out.println("We are on tab:" + tab);
-   
+        if (tab.equals("Profile")) {
+            fetchDetails(vendorID);
+        }
+        else if (tab.equals("History"))
+        {
+            JLabel[] labels = {jLabel9, jLabel10,jLabel11,
+                                     jLabel12,jLabel13,};
+            List recentHistory = fetchHistory(vendorID, "vendor");
+            int count = recentHistory.size();
+            for(int x = 0; x < count; x = x + 1) {
+                labels[x].setText(recentHistory.get(x).toString());
+            }
+            for ( int x =count; x<5; x = x + 1){
+                labels[x].setVisible(false);
+            }
+        }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

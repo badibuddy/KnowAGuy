@@ -15,6 +15,7 @@ import javax.swing.JTabbedPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 /**
  *
  * @author Lulu
@@ -385,16 +386,11 @@ public class CustomerPortal extends javax.swing.JFrame {
 
     if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty() || selection_ == null) {
         valid = false;    
-        JOptionPane.showMessageDialog(this, "Kindly select one service category and provide a start date and an end date.");
+        JOptionPane.showMessageDialog(this, "Kindly select one service category \n and provide a start date and an end date.");
         } 
-    if (!startDate.matches(dateRegex)) {
-            valid = false;
-            JOptionPane.showMessageDialog(this, "Please enter valid start date : dd/mm/yyyy.");
-        } 
-    if (!endDate.matches(dateRegex)) {
-            valid = false;
-            JOptionPane.showMessageDialog(this, "Please enter valid end date : dd/mm/yyyy.");
-        }     
+    
+    valid = validateDates();
+    
     if (valid)
         {
         try {  
@@ -477,6 +473,20 @@ public class CustomerPortal extends javax.swing.JFrame {
         }       
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public boolean validateDates(){
+        boolean validdate =true;
+        if (!startDate.matches(dateRegex)) {
+            validdate = false;
+            JOptionPane.showMessageDialog(this, "Please enter valid start date : dd/mm/yyyy.");
+        } 
+        if (!endDate.matches(dateRegex)) {
+            validdate = false;
+            JOptionPane.showMessageDialog(this, "Please enter valid end date : dd/mm/yyyy.");
+        } 
+        
+        return validdate;
+    }
+    
     public List search() throws JSONException {
             Connection conn;
             Statement stmt;
@@ -497,18 +507,18 @@ public class CustomerPortal extends javax.swing.JFrame {
                 stmt = conn.createStatement();
                 String sql = String.format("SELECT * FROM tbl_vendors "
                         + "where service_category ?| array['%s'] limit 5"
-                    + ";", selection_ );
+                        + ";", selection_ );
                 ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
                     experience = rs.getString("description");
                     name = rs.getString("vendor_uname");
-                    mob_num = rs.getString("mobile_number");
+                    mob_num = "0" + rs.getString("mobile_number");
                     services= rs.getString("service_category");
                     JSONObject jsonObj = new JSONObject(services);
                     rate = jsonObj.getInt(selection_);
-                    String offer =  name + ":" + mob_num + ":" + 
-                            experience + ":" + rate;
-                    
+                    String offer =  "<html>Username: " + name + ", Number: " 
+                            + mob_num + ", Daily Rate: " + rate 
+                            + ",<br>Description: " + experience + "<html>";
                     availableServices.add(offer);
                     }
                 stmt.close();
@@ -518,7 +528,8 @@ public class CustomerPortal extends javax.swing.JFrame {
                 }   catch (SQLException | ClassNotFoundException e){
                
                     System.err.println(e.getClass().getName()+": "+e.getMessage());
-                    JOptionPane.showMessageDialog(this,"We seem to have a technical problem, \nplease try again."); 
+                    JOptionPane.showMessageDialog(this,"We seem to have "
+                            + "a technical problem, \nplease try again."); 
             }
             
             return availableServices;
