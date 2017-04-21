@@ -437,7 +437,8 @@ public class CustomerPortal extends javax.swing.JFrame {
 
     if (startDate.isEmpty() || endDate.isEmpty() || selection_.isEmpty() || selection_ == null) {
         valid = false;    
-        JOptionPane.showMessageDialog(this, "Kindly select one service category \n and provide a start date and an end date.");
+        JOptionPane.showMessageDialog(this, "Kindly select one service category"
+                + " \n and provide a start date and an end date.");
         } 
     
     valid = validateDates();
