@@ -566,7 +566,6 @@ public class CustomerPortal extends javax.swing.JFrame {
 
                 //Open a connection
                 conn = DriverManager.getConnection(host,uName,uPass);
-                System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("SELECT * FROM tbl_vendors "
                         + "where service_category ?| array['%s'] limit 5"

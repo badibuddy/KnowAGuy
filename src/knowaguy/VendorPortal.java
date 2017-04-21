@@ -91,7 +91,6 @@ public class VendorPortal extends javax.swing.JFrame {
             stmt = conn.createStatement();
             String query = String.format("DELETE FROM tbl_%ss "
                     + "where vendor_id = %d;", role, vid);
-            System.out.println(query);
             stmt.execute(query);
             stmt.close();
             conn.close();
@@ -123,7 +122,6 @@ public class VendorPortal extends javax.swing.JFrame {
                         + "mobile_number = '%s' WHERE "
                         + "%s_id = %d;", role_, role_, lname_, role_, fname_, 
                         num_, role_, uid_);
-                System.out.println(sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
@@ -160,7 +158,6 @@ public class VendorPortal extends javax.swing.JFrame {
                     + "where s.%s_fk = %d "
                     + "ORDER BY s.start_date DESC limit 5;",
                     opprole, alias,opprole, alias,opprole ,role,uid);
-            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
                     service = rs.getString("service_name");
