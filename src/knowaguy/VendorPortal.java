@@ -10,7 +10,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -18,8 +22,8 @@ import javax.swing.JOptionPane;
  */
 public class VendorPortal extends javax.swing.JFrame {
     public int vendorID;
-    public static String lname, fname, num;
-    public boolean deleted;
+    public static String lname, fname, num, service, username, startDate, endDate, cost;
+    public boolean deleted, updated;
 
     /**
      * Creates new form VendorPortal
@@ -69,10 +73,11 @@ public class VendorPortal extends javax.swing.JFrame {
             System.exit(0);
         }
     }
-        public boolean deleteUser(int vid) {
+    
+    public static boolean deleteUser(int vid, String role) {
         Connection conn;
         Statement stmt;
-        boolean success;
+        boolean success = false;
         try {
             //Register the JDBC driver
             Class.forName("org.postgresql.Driver");
@@ -84,8 +89,8 @@ public class VendorPortal extends javax.swing.JFrame {
             //Open a connection
             conn = DriverManager.getConnection(host, uName, uPass);
             stmt = conn.createStatement();
-            String query = String.format("DELETE FROM tbl_vendors "
-                    + "where vendor_id = %d;", vid);
+            String query = String.format("DELETE FROM tbl_%ss "
+                    + "where vendor_id = %d;", role, vid);
             System.out.println(query);
             stmt.execute(query);
             stmt.close();
@@ -93,10 +98,91 @@ public class VendorPortal extends javax.swing.JFrame {
             success = true;
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            success=false;
         }
         return success;
     }
+    
+    public static boolean updateVendorDetails(int uid_, String role_, String fname_, String lname_, String num_){
+        Connection conn;
+        Statement stmt;
+        boolean success = false;
+        try{
+            //Register the JDBC driver
+            Class.forName("org.postgresql.Driver");
+            //DB URL and port
+            String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy"; 
+            //DB Credentials
+            String uName = "postgres";
+            String uPass = "p0stgr3s";
+
+            //Open a connection
+            conn = DriverManager.getConnection(host,uName,uPass);
+            stmt = conn.createStatement();
+                String sql = String.format("UPDATE tbl_%ss SET "
+                        + "%s_lname = '%s', %s_fname = '%s', "
+                        + "mobile_number = '%s' WHERE "
+                        + "%s_id = %d;", role_, role_, lname_, role_, fname_, 
+                        num_, role_, uid_);
+                System.out.println(sql);
+                stmt.executeUpdate(sql);
+                stmt.close();
+                conn.close();
+                success = true;
+            }
+            catch (SQLException | ClassNotFoundException e){
+                System.err.println(e.getClass().getName()+": "+e.getMessage());
+            }
+        return success;
+    }   
+    
+    public static List fetchHistory(int uid, String role) {
+        String alias = role.substring(0, 1); 
+        Connection conn;
+        Statement stmt;
+        List past5 = new ArrayList();
+
+        try {
+            //Register the JDBC driver
+            Class.forName("org.postgresql.Driver");
+            //DB URL and port
+            String host = "jdbc:postgresql://139.162.177.203:5432/knowaguy";
+            //DB Credentials
+            String uName = "postgres";
+            String uPass = "p0stgr3s";
+            //Open a connection
+            conn = DriverManager.getConnection(host, uName, uPass);
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+            String sql = String.
+                    format("SELECT * FROM tbl_services as s "
+                    + "JOIN tbl_%ss as %s "
+                    + "ON s.%s_fk = %s.%s_id "
+                    + "where s.%s_fk = %d "
+                    + "ORDER BY s.start_date DESC limit 5;",
+                    role, alias,role, alias,role ,role,uid);
+            ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    service = rs.getString("service_name");
+                    username = rs.getString(String.format("%s_fname", role)) 
+                            + " " + rs.getString(String.format("%s_lname", role));
+                    cost= rs.getString("amount_charged");
+                    startDate= rs.getString("start_date");
+                    endDate= rs.getString("end_date");
+                    String history =  String.format("<html>%s Name: " 
+                            + username + ", Service: " + service 
+                            + ",<br> Cost: " + cost + ",Start Date: " + 
+                            startDate + ", End Date: " + endDate +"<html>", role);
+                    past5.add(history);
+                    }            
+            stmt.close();
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return past5;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -122,21 +208,30 @@ public class VendorPortal extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
 
         jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setFont(new java.awt.Font("Lucida Grande", 2, 12)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Lucida Grande", 3, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Lucida Bright", 2, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Log Out");
@@ -146,7 +241,7 @@ public class VendorPortal extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Lucida Grande", 3, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Lucida Bright", 2, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Delete Profile");
@@ -170,6 +265,11 @@ public class VendorPortal extends javax.swing.JFrame {
 
         jButton1.setText("SUBMIT");
         jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jCheckBox2.setForeground(new java.awt.Color(255, 255, 255));
         jCheckBox2.setText("Edit Profile?");
@@ -198,10 +298,10 @@ public class VendorPortal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(104, 104, 104)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
@@ -241,15 +341,15 @@ public class VendorPortal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(jCheckBox2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -264,29 +364,38 @@ public class VendorPortal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Profile", jPanel1);
 
-        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
-        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Jobs", jPanel2);
-
         jPanel3.setBackground(new java.awt.Color(0, 153, 153));
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Lucida Bright", 0, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Last Five Jobs:");
+
+        jLabel9.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel9.setText("jLabel9");
+
+        jLabel10.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel10.setText("jLabel10");
+
+        jLabel11.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel11.setText("jLabel11");
+
+        jLabel12.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel12.setText("jLabel12");
+
+        jLabel13.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel13.setText("jLabel13");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -296,13 +405,32 @@ public class VendorPortal extends javax.swing.JFrame {
                 .addGap(93, 93, 93)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(103, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel12)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel13)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("History", jPanel3);
@@ -328,6 +456,28 @@ public class VendorPortal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        // TODO add your handling c
+        JTabbedPane tabSource = (JTabbedPane) evt.getSource();
+        String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
+        if (tab.equals("Profile")) {
+            fetchDetails(vendorID);
+        }
+        else if (tab.equals("History"))
+        {
+            JLabel[] labels = {jLabel9, jLabel10,jLabel11,
+                jLabel12,jLabel13};
+            List recentHistory = fetchHistory(vendorID, "vendor");
+            int count = recentHistory.size();
+            for(int x = 0; x < count; x = x + 1) {
+                labels[x].setText(recentHistory.get(x).toString());
+            }
+            for ( int x =count; x<5; x = x + 1){
+                labels[x].setVisible(false);
+            }
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
+
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         jButton1.setEnabled(jCheckBox2.isSelected());
         jTextField1.setEnabled(jCheckBox2.isSelected());
@@ -335,28 +485,41 @@ public class VendorPortal extends javax.swing.JFrame {
         jTextField3.setEnabled(jCheckBox2.isSelected());
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        VendorPortal vp = new VendorPortal();   
-        JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
-                + "You are successfully logged out! ", fname));
-        LoginPage lp = new LoginPage();
-        lp.setVisible(true);
-        dispose();    }//GEN-LAST:event_jLabel2MouseClicked
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        fname = jTextField1.getText();
+        lname = jTextField2.getText();
+        num = jTextField3.getText();
+        updateVendorDetails(vendorID, "vendor", fname, lname, num);
+        if (updated == true){
+            JOptionPane.showMessageDialog(this, "\t\t\tYour details have succesfully been updated.");
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "\t\t\tSorry, unexpected system failure, please try again.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-            deleted = deleteUser(vendorID);
-            VendorPortal vp = new VendorPortal();   
-            if (deleted){
-                JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
-                + "Thank you for using KnowAGuy.", fname)); 
-                LoginPage lp = new LoginPage();
-                lp.setVisible(true);
-                dispose(); 
-            }
-            else {
-                JOptionPane.showMessageDialog(vp, "There was an error, please try again");
-            }
+        deleted = deleteUser(vendorID, "vendor");
+        VendorPortal vp = new VendorPortal();
+        if (deleted){
+            JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
+                + "Thank you for using KnowAGuy.", fname));
+        LoginPage lp = new LoginPage();
+        lp.setVisible(true);
+        dispose();
+        }
+        else {
+            JOptionPane.showMessageDialog(vp, "There was an error, please try again");
+        }
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        VendorPortal vp = new VendorPortal();
+        JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
+            + "You are successfully logged out! ", fname));
+    LoginPage lp = new LoginPage();
+    lp.setVisible(true);
+    }//GEN-LAST:event_jLabel2MouseClicked
 
                      
 
@@ -401,6 +564,10 @@ public class VendorPortal extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -408,8 +575,8 @@ public class VendorPortal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;

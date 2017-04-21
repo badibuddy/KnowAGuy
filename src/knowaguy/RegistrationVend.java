@@ -55,7 +55,7 @@ public class RegistrationVend extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel5.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -96,7 +96,6 @@ public class RegistrationVend extends javax.swing.JFrame {
         jTextArea1.setTabSize(4);
         jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jTextArea1);
-
 
         jButton1.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jButton1.setText("SAVE");
@@ -198,15 +197,7 @@ public class RegistrationVend extends javax.swing.JFrame {
         mobilenum = jTextField2.getText();
         description = jTextArea1.getText();
         
-//        if (description.isEmpty()) {
-//            JOptionPane.showMessageDialog(this,"Kindly input a descrition of your skills");
-//            isValid = false;
-//            else () {
-//            isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
-//                }
-//            }
-//            
-       isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
+       isValid = RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
         
         if (isValid == true){
             registerVendor();
@@ -237,7 +228,6 @@ public class RegistrationVend extends javax.swing.JFrame {
 
                 //Open a connection
                 conn = DriverManager.getConnection(host,uName,uPass);
-                System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("INSERT INTO tbl_vendors "
                         + "(vendor_fname,vendor_lname,vendor_uname,"

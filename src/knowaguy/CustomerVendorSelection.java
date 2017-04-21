@@ -7,7 +7,6 @@ package knowaguy;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
@@ -94,6 +93,7 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
         jLabel2.setText("Please pick a vendor from the selection below :");
 
         buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
         jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton1.setSelected(true);
         jRadioButton1.setText("jRadioButton1");
@@ -101,18 +101,22 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
         jRadioButton1.setHideActionText(true);
 
         buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
         jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton2.setText("jRadioButton2");
 
         buttonGroup1.add(jRadioButton3);
+        jRadioButton3.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
         jRadioButton3.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton3.setText("jRadioButton3");
 
         buttonGroup1.add(jRadioButton4);
+        jRadioButton4.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
         jRadioButton4.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton4.setText("jRadioButton4");
 
         buttonGroup1.add(jRadioButton5);
+        jRadioButton5.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
         jRadioButton5.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton5.setText("jRadioButton5");
 
@@ -133,6 +137,7 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jList1.setVisibleRowCount(1);
         jScrollPane1.setViewportView(jList1);
 
@@ -158,14 +163,11 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                             .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(165, 165, 165)
-                                                .addComponent(jButton1))
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGap(165, 165, 165)
+                                        .addComponent(jButton1))
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -187,15 +189,12 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jRadioButton4)
                 .addGap(18, 18, 18)
+                .addComponent(jRadioButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(16, 16, 16)
+                    .addComponent(jLabel3)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -239,9 +238,11 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Kindly select one of the available vendors.");
         }
         else{
-            String[] vendorArray = selectedVendor.split(":");
-            amount_charged = Integer.parseInt(vendorArray[3]);
-            vendor_name = vendorArray[0];
+            selectedVendor= selectedVendor.replace("<html>", "");
+            selectedVendor= selectedVendor.replace("<br>", "");
+            String[] vendorArray = selectedVendor.split(":|,");
+            amount_charged = Integer.parseInt(vendorArray[5].trim());
+            vendor_name = vendorArray[1];
             payment_mode = jList1.getSelectedValue();
             if (payment_mode == null || payment_mode.isEmpty())
             {
@@ -257,10 +258,6 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             amount_charged = (days == 0) ? amount_charged : amount_charged * days;
             createTransaction();}
         }
-        
-        
-        
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -298,10 +295,9 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
         });
     }
     
-        public void createTransaction(){
+    public void createTransaction(){
             Connection conn;
             Statement stmt;
-            String generatedColumns[] = {"vendor_id"};
             try{
                 //Register the JDBC driver
                 Class.forName("org.postgresql.Driver");
@@ -317,11 +313,10 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                 String sql = String.format("INSERT INTO tbl_services"
                         + "(client_fk,vendor_fk,service_name,"
                         + "start_date,end_date,amount_charged,mode_of_payment) "
-                        + "VALUES (%d, (SELECT vendor_id from tbl_vendors where vendor_uname = '%s'),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), %d, '%s');", 
+                        + "VALUES (%d, (SELECT vendor_id from tbl_vendors where lower(vendor_uname) = lower('%s')),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), %d, '%s');", 
                         clientID, vendor_name, service, start_date, end_date, amount_charged ,payment_mode);
                 System.out.println(sql);
-                stmt.executeUpdate(sql, generatedColumns);
-                ResultSet rs = stmt.getGeneratedKeys();
+                stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
 
