@@ -8,10 +8,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 
-/**
- *
- * @author Lulu
- */
+
 public class RegistrationCust extends javax.swing.JFrame {
 
 

@@ -17,10 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- *
- * @author Lulu
- */
+
 public class CustomerPortal extends javax.swing.JFrame {
     public int custID, rate;
     public static String services, selection_, startDate, endDate, experience, 

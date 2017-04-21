@@ -12,10 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Lulu
- */
+
 public class LoginPage extends javax.swing.JFrame {
 
     /**

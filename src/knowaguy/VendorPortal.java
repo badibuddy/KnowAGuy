@@ -16,10 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-/**
- *
- * @author Lulu
- */
+
 public class VendorPortal extends javax.swing.JFrame {
     public int vendorID;
     public static String lname, fname, num, service, username, startDate, endDate, cost;

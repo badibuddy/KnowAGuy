@@ -9,10 +9,7 @@ import java.awt.event.ActionEvent;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Lulu
- */
+
 public class RegistrationVend extends javax.swing.JFrame {
 
 

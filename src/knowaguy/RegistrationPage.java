@@ -5,10 +5,7 @@
  */
 package knowaguy;
 
-/**
- *
- * @author Lulu
- */
+
 public class RegistrationPage extends javax.swing.JFrame {
     
     
