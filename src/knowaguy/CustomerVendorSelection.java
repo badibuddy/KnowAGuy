@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
     public int clientID, days, amount_charged;
     public List availableVendors;
     public String start_date, end_date, service, vendor_name, payment_mode;
+    public boolean requested;
     /**
      * Creates new form CustomerVendorSelection
      */
@@ -237,12 +239,14 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
         if (selectedVendor == null){
             JOptionPane.showMessageDialog(this,"Kindly select one of the available vendors.");
         }
-        else{
+        else
+        {
             selectedVendor= selectedVendor.replace("<html>", "");
             selectedVendor= selectedVendor.replace("<br>", "");
             String[] vendorArray = selectedVendor.split(":|,");
+            System.out.println(Arrays.toString(vendorArray));
             amount_charged = Integer.parseInt(vendorArray[5].trim());
-            vendor_name = vendorArray[1];
+            vendor_name = vendorArray[1].trim();
             payment_mode = jList1.getSelectedValue();
             if (payment_mode == null || payment_mode.isEmpty())
             {
@@ -255,7 +259,18 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                 Logger.getLogger(CustomerVendorSelection.class.getName()).log(Level.SEVERE, null, ex);
             }
             amount_charged = (days == 0) ? amount_charged : amount_charged * days;
-            createTransaction();}
+            requested = createTransaction();
+            if (requested)
+            {
+            CustomerPortal cp = new CustomerPortal(clientID);
+            cp.setVisible(true);
+            dispose();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Sorry, we had a technical glitch. Please try again.");
+            }
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -294,7 +309,8 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
         });
     }
     
-    public void createTransaction(){
+    public boolean createTransaction(){
+            boolean inserted = false;
             Connection conn;
             Statement stmt;
             try{
@@ -314,15 +330,19 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                         + "start_date,end_date,amount_charged,mode_of_payment) "
                         + "VALUES (%d, (SELECT vendor_id from tbl_vendors where lower(vendor_uname) = lower('%s')),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), %d, '%s');", 
                         clientID, vendor_name, service, start_date, end_date, amount_charged ,payment_mode);
+                System.out.println(sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
-
+                JOptionPane.showMessageDialog(this,"Request successfully created \n"
+                        + "The vendor will get in touch \n"
+                        + "Thank you for using KnnowAGuy .");
+                inserted = true;
             }
             catch (SQLException | ClassNotFoundException e){
                 System.err.println(e.getClass().getName()+": "+e.getMessage());
-                JOptionPane.showMessageDialog(this,"Sorry, we had a technical glitch. Please try again.");
             }
+            return inserted;
     }   
 
 

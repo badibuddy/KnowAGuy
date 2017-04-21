@@ -155,6 +155,7 @@ public class VendorPortal extends javax.swing.JFrame {
                     + "where s.%s_fk = %d "
                     + "ORDER BY s.start_date DESC limit 5;",
                     opprole, alias,opprole, alias,opprole ,role,uid);
+            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
                     service = rs.getString("service_name");
