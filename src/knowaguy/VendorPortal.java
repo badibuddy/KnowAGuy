@@ -135,8 +135,8 @@ public class VendorPortal extends javax.swing.JFrame {
         return success;
     }   
     
-    public static List fetchHistory(int uid, String role) {
-        String alias = role.substring(0, 1); 
+    public static List fetchHistory(int uid, String role, String opprole) {
+        String alias = opprole.substring(0, 1); 
         Connection conn;
         Statement stmt;
         List past5 = new ArrayList();
@@ -159,19 +159,20 @@ public class VendorPortal extends javax.swing.JFrame {
                     + "ON s.%s_fk = %s.%s_id "
                     + "where s.%s_fk = %d "
                     + "ORDER BY s.start_date DESC limit 5;",
-                    role, alias,role, alias,role ,role,uid);
+                    opprole, alias,opprole, alias,opprole ,role,uid);
+            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
                     service = rs.getString("service_name");
-                    username = rs.getString(String.format("%s_fname", role)) 
-                            + " " + rs.getString(String.format("%s_lname", role));
+                    username = rs.getString(String.format("%s_fname", opprole)) 
+                            + " " + rs.getString(String.format("%s_lname", opprole));
                     cost= rs.getString("amount_charged");
                     startDate= rs.getString("start_date");
                     endDate= rs.getString("end_date");
                     String history =  String.format("<html>%s Name: " 
                             + username + ", Service: " + service 
                             + ",<br> Cost: " + cost + ",Start Date: " + 
-                            startDate + ", End Date: " + endDate +"<html>", role);
+                            startDate + ", End Date: " + endDate +"<html>", opprole);
                     past5.add(history);
                     }            
             stmt.close();
@@ -405,15 +406,15 @@ public class VendorPortal extends javax.swing.JFrame {
                 .addGap(93, 93, 93)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(103, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(21, 21, 21))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -467,7 +468,7 @@ public class VendorPortal extends javax.swing.JFrame {
         {
             JLabel[] labels = {jLabel9, jLabel10,jLabel11,
                 jLabel12,jLabel13};
-            List recentHistory = fetchHistory(vendorID, "vendor");
+            List recentHistory = fetchHistory(vendorID, "vendor", "client");
             int count = recentHistory.size();
             for(int x = 0; x < count; x = x + 1) {
                 labels[x].setText(recentHistory.get(x).toString());
@@ -519,6 +520,7 @@ public class VendorPortal extends javax.swing.JFrame {
             + "You are successfully logged out! ", fname));
     LoginPage lp = new LoginPage();
     lp.setVisible(true);
+    dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
                      
