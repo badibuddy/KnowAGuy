@@ -254,7 +254,6 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 Logger.getLogger(CustomerVendorSelection.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("Days : " + days);
             amount_charged = (days == 0) ? amount_charged : amount_charged * days;
             createTransaction();}
         }
@@ -315,7 +314,6 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
                         + "start_date,end_date,amount_charged,mode_of_payment) "
                         + "VALUES (%d, (SELECT vendor_id from tbl_vendors where lower(vendor_uname) = lower('%s')),'%s',to_date('%s', 'DD/MM/YYYY'), to_date('%s', 'DD/MM/YYYY'), %d, '%s');", 
                         clientID, vendor_name, service, start_date, end_date, amount_charged ,payment_mode);
-                System.out.println(sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();

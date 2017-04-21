@@ -229,18 +229,14 @@ public class RegistrationCust extends javax.swing.JFrame {
 
                 //Open a connection
                 conn = DriverManager.getConnection(host,uName,uPass);
-                System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("INSERT INTO tbl_clients "
                         + "(client_fname,client_lname,client_uname,client_pass,mobile_number,location) "
                         + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", fname, lname, username, passwd, mobilenum, location );
-                System.out.println(sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
                 registered = true;
-                System.out.println("Connection closed successfully");
-
             }
             catch (SQLException | ClassNotFoundException e){
                 RegistrationCust rc = new RegistrationCust();

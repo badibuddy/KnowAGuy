@@ -408,7 +408,6 @@ public class VendorServiceSelection extends javax.swing.JFrame {
                 String sql = String.format("UPDATE tbl_vendors SET "
                         + "service_category = '%s' WHERE "
                         + "vendor_id = %d;", servicesOffered, vendorID);
-                System.out.println(sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
