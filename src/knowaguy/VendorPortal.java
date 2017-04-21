@@ -135,7 +135,7 @@ public class VendorPortal extends javax.swing.JFrame {
         return success;
     }   
     
-    public List fetchHistory(int uid, String role) {
+    public static List fetchHistory(int uid, String role) {
         String alias = role.substring(0, 1); 
         Connection conn;
         Statement stmt;
@@ -170,7 +170,7 @@ public class VendorPortal extends javax.swing.JFrame {
                     endDate= rs.getString("end_date");
                     String history =  String.format("<html>%s Name: " 
                             + username + ", Service: " + service 
-                            + ", Cost: " + cost + ",<br>Start Date: " + 
+                            + ",<br> Cost: " + cost + ",Start Date: " + 
                             startDate + ", End Date: " + endDate +"<html>", role);
                     past5.add(history);
                     }            
@@ -208,7 +208,6 @@ public class VendorPortal extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -365,53 +364,37 @@ public class VendorPortal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Profile", jPanel1);
 
-        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
-        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Jobs", jPanel2);
-
         jPanel3.setBackground(new java.awt.Color(0, 153, 153));
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Lucida Bright", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Lucida Bright", 0, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Last Five Jobs:");
 
         jLabel9.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel9.setText("jLabel9");
 
         jLabel10.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("jLabel10");
 
         jLabel11.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel11.setText("jLabel11");
 
         jLabel12.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel12.setText("jLabel12");
 
         jLabel13.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel13.setText("jLabel13");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -422,19 +405,15 @@ public class VendorPortal extends javax.swing.JFrame {
                 .addGap(93, 93, 93)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(103, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -477,36 +456,6 @@ public class VendorPortal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        jButton1.setEnabled(jCheckBox2.isSelected());
-        jTextField1.setEnabled(jCheckBox2.isSelected());
-        jTextField2.setEnabled(jCheckBox2.isSelected());
-        jTextField3.setEnabled(jCheckBox2.isSelected());
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
-
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        VendorPortal vp = new VendorPortal();   
-        JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
-                + "You are successfully logged out! ", fname));
-        LoginPage lp = new LoginPage();
-        lp.setVisible(true);
-        dispose();    }//GEN-LAST:event_jLabel2MouseClicked
-
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-            deleted = deleteUser(vendorID, "vendor");
-            VendorPortal vp = new VendorPortal();   
-            if (deleted){
-                JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
-                + "Thank you for using KnowAGuy.", fname)); 
-                LoginPage lp = new LoginPage();
-                lp.setVisible(true);
-                dispose(); 
-            }
-            else {
-                JOptionPane.showMessageDialog(vp, "There was an error, please try again");
-            }
-    }//GEN-LAST:event_jLabel3MouseClicked
-
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
         // TODO add your handling c
         JTabbedPane tabSource = (JTabbedPane) evt.getSource();
@@ -517,7 +466,7 @@ public class VendorPortal extends javax.swing.JFrame {
         else if (tab.equals("History"))
         {
             JLabel[] labels = {jLabel9, jLabel10,jLabel11,
-                                     jLabel12,jLabel13,};
+                jLabel12,jLabel13};
             List recentHistory = fetchHistory(vendorID, "vendor");
             int count = recentHistory.size();
             for(int x = 0; x < count; x = x + 1) {
@@ -529,18 +478,48 @@ public class VendorPortal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        jButton1.setEnabled(jCheckBox2.isSelected());
+        jTextField1.setEnabled(jCheckBox2.isSelected());
+        jTextField2.setEnabled(jCheckBox2.isSelected());
+        jTextField3.setEnabled(jCheckBox2.isSelected());
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         fname = jTextField1.getText();
         lname = jTextField2.getText();
         num = jTextField3.getText();
         updateVendorDetails(vendorID, "vendor", fname, lname, num);
         if (updated == true){
-           JOptionPane.showMessageDialog(this, "\t\t\tYour details have succesfully been updated.");
+            JOptionPane.showMessageDialog(this, "\t\t\tYour details have succesfully been updated.");
         }
         else{
             JOptionPane.showMessageDialog(this, "\t\t\tSorry, unexpected system failure, please try again.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        deleted = deleteUser(vendorID, "vendor");
+        VendorPortal vp = new VendorPortal();
+        if (deleted){
+            JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
+                + "Thank you for using KnowAGuy.", fname));
+        LoginPage lp = new LoginPage();
+        lp.setVisible(true);
+        dispose();
+        }
+        else {
+            JOptionPane.showMessageDialog(vp, "There was an error, please try again");
+        }
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        VendorPortal vp = new VendorPortal();
+        JOptionPane.showMessageDialog(vp, String.format("\t\t\tGoodbye %s.\n"
+            + "You are successfully logged out! ", fname));
+    LoginPage lp = new LoginPage();
+    lp.setVisible(true);
+    }//GEN-LAST:event_jLabel2MouseClicked
 
                      
 
@@ -598,7 +577,6 @@ public class VendorPortal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;

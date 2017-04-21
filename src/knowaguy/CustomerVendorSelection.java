@@ -241,7 +241,7 @@ public class CustomerVendorSelection extends javax.swing.JFrame {
             selectedVendor= selectedVendor.replace("<html>", "");
             selectedVendor= selectedVendor.replace("<br>", "");
             String[] vendorArray = selectedVendor.split(":|,");
-            amount_charged = Integer.parseInt(vendorArray[5]);
+            amount_charged = Integer.parseInt(vendorArray[5].trim());
             vendor_name = vendorArray[1];
             payment_mode = jList1.getSelectedValue();
             if (payment_mode == null || payment_mode.isEmpty())

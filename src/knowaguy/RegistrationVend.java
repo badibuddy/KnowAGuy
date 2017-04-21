@@ -197,15 +197,7 @@ public class RegistrationVend extends javax.swing.JFrame {
         mobilenum = jTextField2.getText();
         description = jTextArea1.getText();
         
-//        if (description.isEmpty()) {
-//            JOptionPane.showMessageDialog(this,"Kindly input a descrition of your skills");
-//            isValid = false;
-//            else () {
-//            isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
-//                }
-//            }
-//            
-       isValid = knowaguy.RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
+       isValid = RegistrationCust.validateDetails(mobilenum, fname, lname, username, passwd);
         
         if (isValid == true){
             registerVendor();
@@ -236,7 +228,6 @@ public class RegistrationVend extends javax.swing.JFrame {
 
                 //Open a connection
                 conn = DriverManager.getConnection(host,uName,uPass);
-                System.out.println("Connection opened successfully");
                 stmt = conn.createStatement();
                 String sql = String.format("INSERT INTO tbl_vendors "
                         + "(vendor_fname,vendor_lname,vendor_uname,"
